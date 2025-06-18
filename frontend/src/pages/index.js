@@ -186,7 +186,7 @@ export default function LandingPage() {
               </Link>
 
               <Link
-                href="/register"
+                href="/auth"
                 className="border-2 border-gray-700/30 text-gray-700 px-8 py-4 rounded-sm font-semibold text-lg hover:bg-white hover:text-slate-900 transition-all duration-300 backdrop-blur-sm hover:border-black"
               >
                 Sign Up Free

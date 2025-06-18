@@ -9,14 +9,18 @@
 //   );
 // }
 
+import Header from "./Header";
 import SideNav from "./SideNav";
 
 export default function Layout({ children }) {
   return (
-    <div className="flex min-h-screen bg-black text-white">
+    <div className="flex min-h-screen bg-[#0F172A] text-white">
       <SideNav />
-      <main className="flex-1 ml-64 p-8 bg-black min-h-screen">
+      <main className="flex-1 ml-64 bg-[#0F172A] min-h-screen">
+        <Header/>
+        <div className="px-6 py-4">
         {children}
+        </div>
       </main>
     </div>
   );
