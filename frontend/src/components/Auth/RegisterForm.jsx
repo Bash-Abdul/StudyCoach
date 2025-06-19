@@ -42,30 +42,65 @@
 // }
 
 import React from 'react'
+import { useState } from 'react';
 
-const RegisterForm = () => {
+const RegisterForm = ({API, router, Swal, loading, setLoading}) => {
+
+    const [fullName, setFullName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+
+        try {
+            const response = await API.post('/api/auth/register', {fullName, email, password});
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Registration Successful',
+                text: `Welcome, ${response.data.user.fullName}`,
+                showConfirmButton: false,
+                timer: 1500
+              }).then(() => {
+                console.log(response.data);
+                window.location.reload();
+                alert('login to access dashboard'); // or redirect to login page if that's your flow
+              });
+        } catch (err) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Registration Failed',
+                text: err.response?.data?.message || 'Registration failed',
+              });
+        } finally {
+            setLoading(false);
+        }
+    }
+
   return (
-    <form action="" className='w-[22rem] flex flex-col gap-y-4'>
+    <form action="" onSubmit={handleSubmit} className='w-[22rem] flex flex-col gap-y-4'>
 
 <div className='flex flex-col gap-y-1'>
         <label htmlFor="" className='text-sm'>Full Name</label>
-        <input type="text" placeholder='Enter your full name' name="" id="" className='w-full border border-gray-300 py-2 px-4 text-sm rounded-sm' />
+        <input onChange={e => setFullName(e.target.value)} value={fullName} type="text" placeholder='Enter your full name' name="" id="" className='w-full border border-gray-300 py-2 px-4 text-sm rounded-sm' />
     </div>
 
     <div className='flex flex-col gap-y-1'>
         <label htmlFor="" className='text-sm'>Email Address:</label>
-        <input type="email" placeholder='Enter your email' name="" id="" className='w-full border border-gray-300 py-2 px-4 text-sm rounded-sm' />
+        <input onChange={e => setEmail(e.target.value)} value={email} type="email" placeholder='Enter your email' name="" id="" className='w-full border border-gray-300 py-2 px-4 text-sm rounded-sm' />
     </div>
 
     <div>
         <label htmlFor="" className='text-sm'>Password:</label>
-        <input type="email" placeholder='Enter your password' name="" id="" className='w-full border border-gray-300 py-2 px-4 text-sm rounded-sm'/>
+        <input onChange={e => setPassword(e.target.value)} value={password} type="password" placeholder='Enter your password' name="" id="" className='w-full border border-gray-300 py-2 px-4 text-sm rounded-sm'/>
     </div>
 
-    <div>
+    {/* <div>
         <label htmlFor="" className='text-sm'>Confirm Password:</label>
         <input type="email" placeholder='Confirm your password' name="" id="" className='w-full border border-gray-300 py-2 px-4 text-sm rounded-sm'/>
-    </div>
+    </div> */}
     <div className='flex items-center justify-between text-sm'>
         <div className='flex items-center gap-x-1'>
             <input type="checkbox" name="" id="" className='cursor-pointer' />
@@ -73,7 +108,7 @@ const RegisterForm = () => {
         </div>
     </div>
 
-    <button className='bg-[#6366F1] py-2 text-sm text-white rounded-sm cursor-pointer'>Sign in to your account</button>
+    <button disabled={loading} className='bg-[#6366F1] py-2 text-sm text-white rounded-sm cursor-pointer'>{loading ? 'Signing up...' : 'Create your account'}</button>
 </form>
   )
 }
